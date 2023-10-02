@@ -95,3 +95,9 @@ unemployment =
         "dec" ~ "December"))
 ```
 
+```{r merge pols_month, snp and unemployment}
+merge_data = 
+  left_join(pols_month, snp, by = c("year","month")) |>
+  left_join(unemployment, by = c("year","month"))
+```
+
