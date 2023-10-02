@@ -1,0 +1,6 @@
+---
+title: "Homework 2"
+author: "Yige Bian (yb2591)"
+date: 2023-10-01
+output: github_document
+---
