@@ -11,7 +11,9 @@ library(tidyverse)
 ```
 
 ```{r tidy ppols_month}
-# Import data "pol-month" and define types of columns. Warning: There are several '2' in column 'prez_gop' which should be treated the same as '1'.  Then, break up the variable 'mon', replace month number with month name, create 'president' variable, remove 'prez_dem' and 'prez_gop' and 'day'
+# Import data "pol-month" and define types of columns. 
+# Warning: There are several '2' in column 'prez_gop' which should be treated the same as '1'.  
+# Break up the variable 'mon', replace month number with month name, create 'president' variable, remove 'prez_dem' and 'prez_gop' and 'day'
 
 pols_month = 
   read_csv("./data/pols-month.csv", col_types = "Dliiiliii") |>
@@ -101,3 +103,5 @@ merge_data =
   left_join(unemployment, by = c("year","month"))
 ```
 
+After tidying three datasets, the dataset `pols-month` has `r nrow(pols_month)` rows and `r ncol(pols_month)` columns, and varaibles in this dataset are `r colnames(pols_month)`, the range of years is `r range(pols_month$year)`; The dataset `snp` has `r nrow(snp)` rows and `r ncol(snp)` columns, and varaibles in this dataset are `r colnames(snp)`, the range of years is `r range(snp$year)`; The dataset `unemployment` has `r nrow(unemployment)` rows and `r ncol(unemployment)` columns, and varaibles in this dataset are `r colnames(unemployment)`, the range of years is `r range(unemployment$year)`.
+The resulting dataset merged by these three datasets has `r nrow(merge_data)` rows and `r ncol(merge_data)` columns, and varaibles in this dataset  are `r colnames(merge_data)`, the range of years is `r range(merge_data$year)`. We observed that the range of years are different in three datasets, so when we merge them with left_join based on the consequence of `pols_month`, `snp` and `unemployment`, the values of variables in `snp` would be NA in 1947-1949, and values of variables in `unemployment` would be NA in 1948 because these two datasets don't have data for these years.
