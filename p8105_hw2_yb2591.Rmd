@@ -10,7 +10,7 @@ Sys.setenv(LANG = "en_US")
 library(tidyverse)
 ```
 
-```{r}
+```{r tidy ppols_month}
 # Import data "pol-month" and define types of columns. Warning: There are several '2' in column 'prez_gop' which should be treated the same as '1'.  Then, break up the variable 'mon', replace month number with month name, create 'president' variable, remove 'prez_dem' and 'prez_gop' and 'day'
 
 pols_month = 
@@ -40,7 +40,16 @@ pols_month =
         FALSE ~ "dem")) |>
   select(-prez_dem,-prez_gop,-day)
 ```
-```{r}
-
+```{r tidy snp}
+# Import and clean data snp 
+snp = 
+  read_csv("./data/snp.csv", col_types = cols(date = col_date("%m/%d/%y"))) |>
+  janitor::clean_names() |>
+  separate(date, into = c("year","month","day"), sep = "-") |>
+  mutate(
+    year = 
+      as.character(ifelse(as.numeric(year) >= 2050, as.numeric(year)-100, as.numeric(year)))) |>
+  arrange(year, month) |>
+  select(year, month, everything())
 ```
 
