@@ -50,6 +50,48 @@ snp =
     year = 
       as.character(ifelse(as.numeric(year) >= 2050, as.numeric(year)-100, as.numeric(year)))) |>
   arrange(year, month) |>
-  select(year, month, everything())
+  select(year, month, everything()) |>
+  mutate(
+    month = 
+      case_match(
+        month,
+        "01" ~ "January",
+        "02" ~ "February",
+        "03" ~ "March",
+        "04" ~ "April",
+        "05" ~ "May",
+        "06" ~ "June",
+        "07" ~ "July",
+        "08" ~ "August",
+        "09" ~ "September",
+        "10" ~ "October",
+        "11" ~ "November",
+        "12" ~ "December"))
+```
+
+```{r tidy unemployment}
+# Import data unemployment and swith from wide to long format. 
+unemployment =
+  read_csv("./data/unemployment.csv", col_types = "cd") |>
+  janitor::clean_names() |>
+  pivot_longer(jan:dec,
+               names_to = "month",
+               values_to = "per_of_unemp") |>
+  mutate(
+    month = 
+      case_match(
+        month,
+        "jan" ~ "January",
+        "feb" ~ "February",
+        "mar" ~ "March",
+        "apr" ~ "April",
+        "may" ~ "May",
+        "jun" ~ "June",
+        "jul" ~ "July",
+        "aug" ~ "August",
+        "sep" ~ "September",
+        "oct" ~ "October",
+        "nov" ~ "November",
+        "dec" ~ "December"))
 ```
 
