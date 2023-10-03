@@ -11,7 +11,7 @@ library(tidyverse)
 library(readxl)
 ```
 # Problem 1
-```{r tidy ppols_month}
+```{r tidy ppols_month, warning=FALSE}
 # Import data "pol-month" and define types of columns. 
 # Warning: There are several '2' in column 'prez_gop' which should be treated the same as '1'.  
 # Break up the variable 'mon', replace month number with month name, create 'president' variable, remove 'prez_dem' and 'prez_gop' and 'day'
@@ -140,4 +140,28 @@ Mr_Prof_Gwyn=bind_rows(Mr_Trash_Wheel,Prof_Trash_Wheel,Gwyn_Trash_Wheel)
 
 The data set `Mr. Trash Wheel` has 547 observations and 15 variables, the data set `Professor Trash Wheel` has 94 observations and 14 variables, the data set `Gwynnda Trash Wheel` has 25 observations and 12 variables. All these three data sets includes information on the dumpter number, date of collection, amount of total litter, amount of each litter type, and estimated homes powered.
 The merged data of these three data sets has 666 observations and 16 variables. It is obvious that the observations of the merged data is the sum of observations of three data sets. The merged data contains variable `dumpster` which indicates the no. of dumpster and variables `year`, `month` and `date` which indicate the date, then `weight_tons` and viriables of different litter type show the amount of total litter and amount of each litter type. The total weight of trash collected by Professor Trash Wheel is: `r sum(Mr_Prof_Gwyn$weight_tons[Mr_Prof_Gwyn$which_Trash_Wheel=="Prof"])`, the total number of cigarette butts collected by Gwynnda in July of 2021 is: `r sum(Mr_Prof_Gwyn$cigarette_butts[Mr_Prof_Gwyn$which_Trash_Wheel=="Gwyn" & Mr_Prof_Gwyn$year=="2021" & Mr_Prof_Gwyn$month=="July"])`.
+
+Problem 3
+```{r, warning=FALSE}
+MCI_baseline = 
+  read_csv("./data/MCI_baseline.csv", skip = 1, col_types = "cdlild") |>
+  janitor::clean_names() |>
+  mutate(
+    sex = 
+      case_match(
+        sex,
+        FALSE ~ "Female",
+        TRUE ~ "Male"),
+    apoe4=
+      case_match(
+        apoe4,
+        TRUE ~ "carrier",
+        FALSE ~ "non-carrier"))|>
+  filter(is.na(age_at_onset) | age_at_onset - current_age > 0)
+```
+
+The original data set `MCI_baseline` has 483 observations and 6 variables which describes the Age at the study baseline, sex, years of education, apoe4 carry status and Age at the onset of MCI. Thorugh the data clean and tidy process, values of `sex` and `apoe4` were recoded to Female & Male and carrier & non-carrier based on their logical values. Then, if the `age_at_onset` is less than or equal to `current_age`, the correspond participants are not meet the stated inclusion criteria because they have MCI at baseline, and these observations (4 observations) were removed.
+After such process, there are 479 observations left which means there are 479 participants were recruited who meet the stated inclusion criteria, and `r sum(!is.na(MCI_baseline$age_at_onset))` of them develop MCI during the follow-up period. The average baseline age is `r mean(MCI_baseline$current_age)`, `r sum(MCI_baseline$apoe4 == "carrier" & MCI_baseline$sex == "Female")/479`and of women in the study are APOE4 carriers.
+
+
 
