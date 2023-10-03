@@ -104,8 +104,8 @@ merge_data =
   left_join(unemployment, by = c("year","month"))
 ```
 
-After tidying three datasets, the dataset `pols-month` has `r nrow(pols_month)` rows and `r ncol(pols_month)` columns, and varaibles in this dataset are `r colnames(pols_month)`, the range of years is `r range(pols_month$year)`; The dataset `snp` has `r nrow(snp)` rows and `r ncol(snp)` columns, and varaibles in this dataset are `r colnames(snp)`, the range of years is `r range(snp$year)`; The dataset `unemployment` has `r nrow(unemployment)` rows and `r ncol(unemployment)` columns, and varaibles in this dataset are `r colnames(unemployment)`, the range of years is `r range(unemployment$year)`.
-The resulting dataset merged by these three datasets has `r nrow(merge_data)` rows and `r ncol(merge_data)` columns, and varaibles in this dataset  are `r colnames(merge_data)`, the range of years is `r range(merge_data$year)`. We observed that the range of years are different in three datasets, so when we merge them with left_join based on the consequence of `pols_month`, `snp` and `unemployment`, the values of variables in `snp` would be NA in 1947-1949, and values of variables in `unemployment` would be NA in 1948 because these two datasets don't have data for these years.
+After tidying three datasets, the dataset `pols-month` contains 822 observations of 9 variables related to the number of national politicians who are democratic or republican from 1947 to 2015; The dataset `snp` contains 787 observations of 2 variables related to Standard & Poor’s stock market index (S&P), often used as a representative measure of stock market as a whole from 1950 to 2015; The dataset `unemployment` contains 68 observations of 13 variables which describes the percentage of unemployment in each month from 1948 to 2015.
+The resulting dataset merged by these three datasets has `r nrow(merge_data)` rows and `r ncol(merge_data)` columns, there are 822 observations and 12 varaibles, the range of years is `r range(merge_data$year)`. We observed that the range of years are different in three datasets, so when we merge them with left_join based on the consequence of `pols_month`, `snp` and `unemployment`, the values of variables in `snp` would be NA in 1947-1949, and values of variables in `unemployment` would be NA in 1948 because these two datasets don't have data for these years. From 1950 to 2015, the average unemployment rate was `r mean(merge_data$per_of_unemp[as.numeric(merge_data$year)>=1975 & merge_data$president=='dem'])` when a democrat was president. The average unemployment rate over the same time period in which a republican was president was `r mean(merge_data$per_of_unemp[as.numeric(merge_data$year)>=1975 & merge_data$president=='gop'])`.
 
 # Problem 2
 ```{r Import and merge trash wheel data sets}
@@ -127,7 +127,7 @@ Prof_Trash_Wheel =
     which_Trash_Wheel = "Prof")
 
 Gwyn_Trash_Wheel = 
-  read_excel("./data/202207 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range = "A2:K27") |>
+  read_excel("./data/202207 Trash Wheel Collection Data.xlsx", sheet = "Gwynnda Trash Wheel", range="A2:K27") |>
   janitor::clean_names() |>
   mutate(
     homes_powered = 
@@ -138,4 +138,6 @@ Gwyn_Trash_Wheel =
 Mr_Prof_Gwyn=bind_rows(Mr_Trash_Wheel,Prof_Trash_Wheel,Gwyn_Trash_Wheel)
 ```
 
+The data set `Mr. Trash Wheel` has 547 observations and 15 variables, the data set `Professor Trash Wheel` has 94 observations and 14 variables, the data set `Gwynnda Trash Wheel` has 25 observations and 12 variables. All these three data sets includes information on the dumpter number, date of collection, amount of total litter, amount of each litter type, and estimated homes powered.
+The merged data of these three data sets has 666 observations and 16 variables. It is obvious that the observations of the merged data is the sum of observations of three data sets. The merged data contains variable `dumpster` which indicates the no. of dumpster and variables `year`, `month` and `date` which indicate the date, then `weight_tons` and viriables of different litter type show the amount of total litter and amount of each litter type. The total weight of trash collected by Professor Trash Wheel is: `r sum(Mr_Prof_Gwyn$weight_tons[Mr_Prof_Gwyn$which_Trash_Wheel=="Prof"])`, the total number of cigarette butts collected by Gwynnda in July of 2021 is: `r sum(Mr_Prof_Gwyn$cigarette_butts[Mr_Prof_Gwyn$which_Trash_Wheel=="Gwyn" & Mr_Prof_Gwyn$year=="2021" & Mr_Prof_Gwyn$month=="July"])`.
 
