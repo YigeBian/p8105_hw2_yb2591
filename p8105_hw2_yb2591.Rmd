@@ -170,7 +170,7 @@ mci_amyloid =
   mutate(id = study_id) |>
   select(id, everything(), -study_id)
 ```
-The data set `mci_amyloid` has 487 observations and 6 variables, participants with id `setdiff(MCI_baseline$id, mci_amyloid$study_id)` appear in `MCI_baseline` but not in `mci_amyloid`, while participants with id `setdiff(mci_amyloid$study_id, MCI_baseline$id)` appear in `mci_amyloid` but not in `MCI_baseline`. This happened because 1. some participants in `MCI_baseline` who didn't meet the stated inclusion criteria were removed before; 2. some participants may lost contact during the follow-up period.
+The data set `mci_amyloid` has 487 observations and 6 variables, participants with id `r setdiff(MCI_baseline$id, mci_amyloid$id)` appear in `MCI_baseline` but not in `mci_amyloid`, while participants with id `r setdiff(mci_amyloid$id, MCI_baseline$id)` appear in `mci_amyloid` but not in `MCI_baseline`. This happened because 1. some participants in `MCI_baseline` who didn't meet the stated inclusion criteria were removed before; 2. some participants may lost contact during the follow-up period.
 
 ```{r merge two MCI datasets}
 merged_MCI = inner_join(MCI_baseline, mci_amyloid, by = "id")
